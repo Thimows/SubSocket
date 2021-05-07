@@ -47,7 +47,6 @@
           onError: function (err) {
             // For example, redirect to a specific error page
             console.log(err)
-            window.location.href = response['Cancel URL'];
           }
         })
           .render("#" + elementID);
@@ -97,4 +96,4 @@
         });
       }
     }
-  } 
+  }
