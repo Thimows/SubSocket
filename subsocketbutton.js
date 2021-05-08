@@ -1,3 +1,8 @@
+/**
+ * Copyright SubSocket.io
+ * Version 0.1.3
+ */
+
 function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
 
     if (document.querySelector('#'+elementID+' .paypal-buttons') !== null) {
@@ -21,7 +26,9 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
       .then(function (data) {
       // This is the JSON from our response
       if (document.querySelector('#'+elementID+' .paypal-buttons') == null) {
-        renderButton(data.response);
+        setTimeout(function () {
+          renderButton(data.response);
+        }, 1)
       }
     })
       .catch(function (err) {
@@ -100,4 +107,4 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
         );
       });
     }
- }
+    }
