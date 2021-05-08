@@ -1,9 +1,9 @@
 /**
  * Copyright SubSocket.io
- * Version 0.1.3
+ * Version 0.1.4
  */
 
-function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
+  function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
 
     if (document.querySelector('#'+elementID+' .paypal-buttons') !== null) {
 
@@ -16,6 +16,7 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
         var verstionTest = 'version-live'
         }
 
+    //Recieve checkout details from SubSocket
     fetch(
       `${"https://www.subsocket.io/"+verstionTest+"/api/1.1/obj/checkout/" + checkoutID}`
     )
@@ -39,8 +40,8 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
       );
     });
 
-    const renderButton = (response) => {
 
+    const renderButton = (response) => {
       paypal
         .Buttons({
 
@@ -63,8 +64,6 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
       })
         .render("#" + elementID);
     };
-
-
 
     const subscriptionSuccesful = (response, subscriptionID) => {
 
@@ -95,9 +94,22 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
           'Content-type': 'application/json' // The type of data you're sending
         }
       })     
-        .then(function (response) {
+        .then(function (result) {
         // The API call was successful!
         console.log("Subscription successfully created in SubSocket")
+
+        //Redirect user to success URL
+        var successURL = response['Success URL']
+        console.log(successURL)
+        var URLParameters = successURL.match('(\?|\&)([^=]+)\=([^&]+)')      
+
+        if (URLParameters.length == 0) {
+          var finalURL = successURL + '?subscription_id=' + subscriptionID + '&checkout_id=' + checkoutID
+          } else {
+            var finalURL = successURL + '&subscription_id=' + subscriptionID + '&checkout_id=' + checkoutID
+            }
+        console.log('Redirecting to', finalURL)
+        window.location.href(finalURL);
       })
         .catch(function (err) {
         // There was an error
