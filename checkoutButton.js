@@ -1,9 +1,9 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.5
+ * Version 1.1.6
  */
 
-function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
+function SubSocketButton(checkoutID, versionTest = false, config, elementID, application) {
 
   if (document.querySelector('#' + elementID + ' .paypal-buttons') !== null) {
 
@@ -76,7 +76,7 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID) {
     var body = JSON.stringify({
       "Checkout": checkoutID,
       "Subscription ID": subscriptionID,
-      "Application": response.Application,
+      "Application": application,
       "Sandbox mode": response['Sandbox mode'],
       "Status": 'success',
       //"Subscription detail (object)": data,
