@@ -1,3 +1,9 @@
+/**
+ * Copyright SubSocket.io
+ * Version 1.1.6
+ */
+
+
 function SubSocketButton(singlePaymentID, versionTest = false, config, elementID, application) {
 
   if (document.querySelector('#' + elementID + ' .paypal-buttons') !== null) {
