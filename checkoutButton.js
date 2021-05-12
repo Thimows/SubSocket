@@ -80,8 +80,8 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID, app
       "Sandbox mode": response['Sandbox mode'],
       "Status": 'success',
       //"Subscription detail (object)": data,
-      "User name": "[Created via SubSocket button] Click to load user information",
-      "User email": "[Created via SubSocket button] Click to load user information",
+      "User name": "",
+      "User email": "",
       "Plan ID": response['Plan ID'],
       "Status (subscription object)": 'SUCCESS',
       "Log": "Created using SubSocket button"
