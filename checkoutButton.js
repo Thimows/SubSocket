@@ -1,6 +1,6 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.6
+ * Version 1.1.7
  */
 
 function SubSocketButton(checkoutID, versionTest = false, config, elementID, application) {
@@ -12,14 +12,15 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID, app
 
   var versionTest
   if (versionTest) {
-    verstionTest = 'version-test'
+    versionTest = 'version-test'
   } else {
-    verstionTest = 'version-live'
+    versionTest = 'version-live'
   }
+  
 
   //Recieve checkout details from SubSocket
   fetch(
-      `${"https://www.subsocket.io/"+verstionTest+"/api/1.1/obj/checkout/" + checkoutID}`
+      `${"https://www.subsocket.io/"+versionTest+"/api/1.1/obj/checkout/" + checkoutID}`
     )
     .then(function(response) {
       // The API call was successful!
@@ -43,6 +44,7 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID, app
 
 
   const renderButton = (response) => {
+    console.log(response)
     paypal
       .Buttons({
 
@@ -55,7 +57,7 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID, app
         },
 
         onApprove: function(data, actions) {
-          subscriptionSuccesful(response, data.subscriptionID)
+          createSubscription(response, data.subscriptionID)
         },
 
         onError: function(err) {
@@ -65,67 +67,53 @@ function SubSocketButton(checkoutID, versionTest = false, config, elementID, app
       })
       .render("#" + elementID);
   };
-
-  const subscriptionSuccesful = (response, subscriptionID) => {
-
-    createSubscription(response, subscriptionID)
-  }
+  
 
   const createSubscription = (response, subscriptionID) => {
 
-    var body = JSON.stringify({
-      "Checkout": checkoutID,
-      "Subscription ID": subscriptionID,
-      "Application": application,
-      "Sandbox mode": response['Sandbox mode'],
-      "Status": 'success',
-      //"Subscription detail (object)": data,
-      "User name": "",
-      "User email": "",
-      "Plan ID": response['Plan ID'],
-      "Status (subscription object)": 'SUCCESS',
-      "Log": "Created using SubSocket button"
-    })
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    //POST API call to create subscription inside SubSocket
-    fetch(`${"https://www.subsocket.io/"+verstionTest+"/api/1.1/obj/Subscriptions"}`, {
-        method: 'POST',
-        body: body, // The data
-        headers: {
-          'Content-type': 'application/json' // The type of data you're sending
-        }
-      })
+    var raw = JSON.stringify({
+      "checkout_id": checkoutID,
+      "sandbox": response["Sandbox mode"],
+      "application": application,
+      "version": versionTest,
+      "subscription_id": subscriptionID,
+      "response": response
+    });
 
-      .then(function(result) {
-        // The API call was successful!
-        console.log("Subscription successfully created in SubSocket")
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("https://subsocket.herokuapp.com", requestOptions)
+      .then(response => {
+        response.json()
         actionSuccessful(response, subscriptionID)
       })
-
-      .catch(function(err) {
-        // There was an error
-        console.warn(
-          "Something went wrong with creating the subsciption in SubSocket.",
-          err
-        );
-      });
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
 
 
-    const actionSuccessful = (response, subscriptionID) => {
-      //Redirect user to success URL
-      var successURL = response['Succes URL']
+  const actionSuccessful = (response, subscriptionID) => {
+    //Redirect user to success URL
+    var successURL = response['Succes URL']
 
-      var url = new URL(successURL);
-      var lengthURLParameters = Array.from(url.searchParams).length
+    var url = new URL(successURL);
+    var lengthURLParameters = Array.from(url.searchParams).length
 
-      var finalURL
-      if (lengthURLParameters == 0) {
-        finalURL = successURL + '?subscription_id=' + subscriptionID + '&checkout_id=' + checkoutID
-      } else if (lengthURLParameters > 0){
-        finalURL = successURL + '&subscription_id=' + subscriptionID + '&checkout_id=' + checkoutID
-      }
-      console.log('Redirecting to', finalURL)
-      window.location.href = finalURL;
+    var finalURL
+    if (lengthURLParameters == 0) {
+      finalURL = successURL + '?subscription_id=' + subscriptionID + '&checkout_id=' + checkoutID
+    } else if (lengthURLParameters > 0) {
+      finalURL = successURL + '&subscription_id=' + subscriptionID + '&checkout_id=' + checkoutID
     }
+    console.log('Redirecting to', finalURL)
+    window.location.href = finalURL;
   }
 }
