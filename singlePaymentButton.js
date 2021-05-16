@@ -1,10 +1,9 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.9
+ * Version 1.1.10
  */
 
-
-function SubSocketButton(singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID) {
+function SubSocketButton(singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
 
   var script = document.createElement('script');
   script.onload = function() {
@@ -221,6 +220,6 @@ function SubSocketButton(singlePaymentID, versionTestPara = false, config, eleme
       }
     }
   }
-  script.src = 'https://www.paypal.com/sdk/js?client-id=' + clientID + '&vault=true&intent=subscription&disable-funding=credit';
+  script.src = 'https://www.paypal.com/sdk/js?client-id=' + clientID + '&currency=' + currencyCode + '&disable-funding=credit';
   document.head.appendChild(script)
 }
