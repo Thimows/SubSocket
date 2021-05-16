@@ -1,6 +1,6 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.9
+ * Version 1.1.10
  */
 
 function SubSocketButton(checkoutID, versionTestPara = true, config, elementID, application, limit, clientID) {
