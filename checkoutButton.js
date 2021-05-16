@@ -164,8 +164,7 @@ function SubSocketButton(checkoutID, versionTestPara = true, config, elementID, 
       };
 
       fetch("https://subsocket.herokuapp.com", requestOptions)
-        .then(response => {
-          response.json()
+        .then(responseFromHeroku => {
           actionSuccessful(response, subscriptionID)
         })
         .then(result => console.log(result))
