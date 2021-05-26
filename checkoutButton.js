@@ -168,7 +168,7 @@ function SubSocketButton(checkoutID, versionTestPara = true, config, elementID, 
           actionSuccessful(response, subscriptionID)
         })
         .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+        .catch(error => actionSuccessful(response, subscriptionID));
     }
 
 
