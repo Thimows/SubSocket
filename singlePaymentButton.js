@@ -1,6 +1,6 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.12
+ * Version 1.1.14
  */
 
 function SubSocketButton(amount, singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
@@ -125,7 +125,7 @@ function SubSocketButton(amount, singlePaymentID, versionTestPara = false, confi
       }
       
       if (amount !== 0 && amount !== null && amount !== undefined) {
-        totalAmount += amount * vat
+        totalAmount += amount/100 * vat
       } else {
         totalAmount += data.response.results.length * vat
       }
@@ -227,3 +227,5 @@ function SubSocketButton(amount, singlePaymentID, versionTestPara = false, confi
   script.src = 'https://www.paypal.com/sdk/js?client-id=' + clientID + '&currency=' + currencyCode + '&disable-funding=credit';
   document.head.appendChild(script)
 }
+
+
