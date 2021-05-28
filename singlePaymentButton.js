@@ -1,9 +1,9 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.11
+ * Version 1.1.12
  */
 
-function SubSocketButton(singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
+function SubSocketButton(amount, singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
 
   var script = document.createElement('script');
   script.onload = function() {
@@ -40,7 +40,7 @@ function SubSocketButton(singlePaymentID, versionTestPara = false, config, eleme
       })
       .then(function(data) {
         // This is the JSON from our response
-        totalAmount += data.response.results.length
+
         //console.log(totalAmount)
         amountTransactions()
       })
@@ -65,7 +65,7 @@ function SubSocketButton(singlePaymentID, versionTestPara = false, config, eleme
         })
         .then(function(data) {
           // This is the JSON from our response
-          totalAmount += data.response.results.length
+          //totalAmount += data.response.results.length
           //console.log(totalAmount)
           if (totalAmount > limit && window.location.origin !== 'https://subsocket.io') {
 
@@ -123,8 +123,12 @@ function SubSocketButton(singlePaymentID, versionTestPara = false, config, eleme
       } else {
         vat = (response.VAT / 100) + 1
       }
-
-      var amount = response.Amount * vat
+      
+      if (amount !== 0 && amount !== null && amount !== undefined) {
+        totalAmount += amount * vat
+      } else {
+        totalAmount += data.response.results.length * vat
+      }
 
       paypal
         .Buttons({
@@ -136,7 +140,7 @@ function SubSocketButton(singlePaymentID, versionTestPara = false, config, eleme
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: amount
+                  value: totalAmount
                 }
               }]
             });
@@ -181,7 +185,7 @@ function SubSocketButton(singlePaymentID, versionTestPara = false, config, eleme
       //POST API call to create subscription inside SubSocket
       fetch(`${"https://www.subsocket.io/"+versionTest+"/api/1.1/obj/Transactions"}`, {
           method: 'POST',
-          body: body, // The data
+          body: body, // The datavuY(_1Ob
           headers: {
             'Content-type': 'application/json' // The type of data you're sending
           }
