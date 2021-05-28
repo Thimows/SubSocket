@@ -1,6 +1,6 @@
 /**
  * Copyright SubSocket.io
- * Version 1.1.14
+ * Version 2.1.0
  */
 
 function SubSocketButton(amount = 0, singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
@@ -40,7 +40,7 @@ function SubSocketButton(amount = 0, singlePaymentID, versionTestPara = false, c
       })
       .then(function(data) {
         // This is the JSON from our response
-
+				totalAmount += data.response.results.length
         //console.log(totalAmount)
         amountTransactions()
       })
@@ -65,7 +65,7 @@ function SubSocketButton(amount = 0, singlePaymentID, versionTestPara = false, c
         })
         .then(function(data) {
           // This is the JSON from our response
-          //totalAmount += data.response.results.length
+          totalAmount += data.response.results.length
           //console.log(totalAmount)
           if (totalAmount > limit && window.location.origin !== 'https://subsocket.io') {
 
@@ -124,10 +124,12 @@ function SubSocketButton(amount = 0, singlePaymentID, versionTestPara = false, c
         vat = (response.VAT / 100) + 1
       }
       
+      var amountButton = 0
+      
       if (amount !== 0 && amount !== null && amount !== undefined) {
-        totalAmount += amount/100 * vat
+        amountButton += amount/100 * vat
       } else {
-        totalAmount += data.response.results.length * vat
+        amountButton += response.Amount * vat
       }
 
       paypal
@@ -140,7 +142,7 @@ function SubSocketButton(amount = 0, singlePaymentID, versionTestPara = false, c
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: totalAmount
+                  value: amountButton
                 }
               }]
             });
