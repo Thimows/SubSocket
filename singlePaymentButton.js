@@ -3,7 +3,7 @@
  * Version 1.1.14
  */
 
-function SubSocketButton(amount, singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
+function SubSocketButton(amount = 0, singlePaymentID, versionTestPara = false, config, elementID, application, limit, clientID, currencyCode) {
 
   var script = document.createElement('script');
   script.onload = function() {
